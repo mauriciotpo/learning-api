@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/mauriciotpo/learning-api#readme",
   "dependencies": {
+    "body-parser": "^1.18.2",
     "express": "^4.16.2"
   }
 }

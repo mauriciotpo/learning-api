@@ -1,16 +1,61 @@
 var express = require('express');
 var app = express();
+var bodyParser = require('body-parser');
 
-app.get('/', function(request, response) {
-    response.send ('My First Api!');
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended:false}));
+
+var ingredients= [
+    {
+        "id":"29469",
+        "text":"Eggs"
+    },
+    {
+        "id":"2354768",
+        "text":"Milk"
+    },
+    {
+        "id":"458579",
+        "text":"Bacon"
+    },
+    {
+        "id":"25792",
+        "text":"Chesse"
+    },
+
+];
+
+app.get('/ingredients', function(request, response) {
+    response.send(ingredients);
 });
 
-app.get('/funions', function(request, response) {
-    response.send('Yo give me some funions fool!');
+app.post('/ingredients', function(request, response) {
+    var ingredient = request.body;
+    if (!ingredient || ingredient.text === "") {
+        response.status(500).send({error: "Your ingredient must have text"});
+    } else {
+        ingredients.push(ingredient);
+        response.status(200).send(ingredients);
+    }
 });
 
-app.get('/mauricio', function(request, response) {
-    response.send('AGORA VAI PAPAI!');
+app.put('/ingredients/:ingredientId', function(request, response){
+
+    var newText = request.body.text;
+
+    if (!newText || newText === "") {
+        response.status(500).send({error: "You must provide ingredient text"})
+    } else {
+        for (var x = 0; x < ingredients.length; x++){
+        var ing = ingredients[x];
+
+        if (ing.id === request.params.ingredientId) {
+            ingredients[x].text = newText;
+            break;
+            }
+        } 
+        response.send(ingredients);
+    }
 });
 
 app.listen(3000, function( ){
